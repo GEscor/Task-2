@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Task-2</title>
+    <style type="text/css">
+        input:invalid {
+           background-color: pink;   
+        }
+        p {
+            color: grey;
+            font-style: italic;
+        } 
+    </style>
+</head>
+<body>
+    <div>
+        <label>
+            Исходное положение:<br>
+            <input 
+                type="text" 
+                id="input" 
+                value="" 
+                pattern="[A-Ha-h]{1}[1-8]{1}" 
+                title="Одна буква английской раскладки A-H плюс одна цифра от 1 до 8" 
+                autocomplete="off"
+                oninput="check()"/>
+        </label>
+        <br>
+        <p>Одна буква английской раскладки A-H плюс одна цифра от 1 до 8</p>
+        <button id="btn" onclick="calculate()" disabled=true>Ок</button>
+    </div>
+</body>
+<script>
+    //Значения клеток поля, буквы - колонки, цифры - ряды
+    const cols = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H'];
+    const rows = ['1', '2', '3', '4', '5', '6', '7', '8'];
+
+    const input = document.getElementById("input");
+    const btn = document.getElementById("btn");
+    // Проверка значения input. Кнопка не работает при неправильных значениях и пустом поле 
+    check = () => {
+        if (input.value.search(/[A-Ha-h]/) > -1 && input.value.search(/[1-8]/) > -1 && input.value.length < 3) {
+            btn.disabled = false;
+        } else {
+            btn.disabled = true;
+        }
+        return
+    }  
+    // Вычисление возможных ходов
+    // Всего 8 вариантов, ряды проверяются попарно для каждой колонки, начиная с самой левой колонки (-2) и заканчивая самой правой(+2)
+    calculate = () => {
+        const value = input.value;
+        const letter = cols.indexOf(value[0].toUpperCase()); //исходная колонка
+        const number = parseInt(value[1], 10) - 1; //исходный ряд
+        let moves = [];
+        // проверки
+        if (cols[letter - 2]) {
+           if (rows[number - 1]) {
+                moves.push(cols[letter - 2] + rows[number - 1])
+           } 
+           if (rows[number + 1]) {
+                moves.push(cols[letter - 2] + rows[number + 1]) 
+           }
+        }
+
+        if (cols[letter - 1]) {
+           if (rows[number - 2]) {
+                moves.push(cols[letter - 1] + rows[number - 2]);
+           } 
+           if (rows[number + 2]) {
+                moves.push(cols[letter - 1] + rows[number + 2]);
+           }
+        }
+
+        if (cols[letter + 1]) {
+            if (rows[number - 2]) {
+                moves.push(cols[letter + 1] + rows[number - 2]);
+            }
+            if (rows[number + 2]) {
+                moves.push(cols[letter + 1] + rows[number + 2]);
+            }
+        }
+
+        if (cols[letter + 2]) {
+            if (rows[number - 1]) {
+                moves.push(cols[letter + 2] + rows[number - 1]);
+            }
+            if (rows[number + 1]) {
+                moves.push(cols[letter + 2] + rows[number + 1]);
+            }
+        }
+        
+        alert ("Возможные варианты хода: " + moves.join(' ')); //вывод результата
+        return
+    }
+</script>
+</html>
